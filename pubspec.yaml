@@ -86,8 +86,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
-  flutter:
-    sdk: flutter
-  http: ^0.14.0
-  flutter_svg: ^1.0.3
