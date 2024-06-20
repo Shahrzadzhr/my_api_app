@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+void main() => runApp(const MyApp());
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -56,43 +58,46 @@ class HomePage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
+          } else if (snapshot.hasData) {
             var movieData = snapshot.data!;
             return ListView(
-              children: <Widget>[
-                ListTile(
-                  title: Text(movieData['title']),
-                  subtitle: Text(movieData['type']),
-                ),
-                Image.network(movieData['poster_url']),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(movieData['overview']),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Release Date: ${movieData['release_date']}'),
-                ),
-                const Divider(),
-                ListTile(
-                  title: Text(movieData['following_production']['title']),
-                  subtitle: Text(movieData['following_production']['type']),
-                ),
-                Image.network(movieData['following_production']['poster_url']),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(movieData['following_production']['overview']),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                      'Release Date: ${movieData['following_production']['release_date']}'),
-                ),
+              children: [
+                MovieDetailsTile(movieData: movieData),
+                MovieDetailsTile(movieData: movieData['following_production']),
               ],
             );
           }
+          return const Center(child: Text('No data available'));
         },
       ),
+    );
+  }
+}
+
+class MovieDetailsTile extends StatelessWidget {
+  final Map<String, dynamic> movieData;
+
+  const MovieDetailsTile({required this.movieData, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          title: Text(movieData['title']),
+          subtitle: Text(movieData['type']),
+        ),
+        Image.network(movieData['poster_url']),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(movieData['overview']),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Release Date: ${movieData['release_date']}'),
+        ),
+        const Divider(),
+      ],
     );
   }
 }
