@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
-void main() => runApp(const MyApp());
+import 'package:http/http.dart' as http;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -20,29 +20,18 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Future<Map<String, dynamic>> fetchMovieData() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return {
-      "days_until": 37,
-      "following_production": {
-        "days_until": 93,
-        "id": 138501,
-        "overview":
-            "Follow Agatha Harkness before and after her appearance in WandaVision.",
-        "poster_url":
-            "https://image.tmdb.org/t/p/w500/2a6bSlg7U5ldtelPssyay4Vbl6U.jpg",
-        "release_date": "2024-09-18",
-        "title": "Agatha All Along",
-        "type": "TV Show"
-      },
-      "id": 533535,
-      "overview":
-          "A listless Wade Wilson toils away in civilian life with his days as the morally flexible mercenary, Deadpool, behind him. But when his homeworld faces an existential threat, Wade must reluctantly suit-up again with an even more reluctant Wolverine.",
-      "poster_url":
-          "https://image.tmdb.org/t/p/w500/jbwYaoYWZwxtPP76AZnfYKQjCEB.jpg",
-      "release_date": "2024-07-24",
-      "title": "Deadpool & Wolverine",
-      "type": "Movie"
-    };
+    var url = Uri.parse(
+        'https://image.tmdb.org/t/p/w500/2a6bSlg7U5ldtelPssyay4Vbl6U.jpg');
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to load movie data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load movie data: $e');
+    }
   }
 
   @override
